@@ -1,6 +1,7 @@
 const {
     SlashCommandBuilder,
-    ChannelType
+    ChannelType,
+    PermissionsBitField
 } = require("discord.js");
 
 module.exports = {
@@ -26,8 +27,21 @@ module.exports = {
 
         const channel = interaction.options.getChannel("channel");
 
+        const permissions = channel.permissionsFor(interaction.guild.members.me);
+
+        if (
+            !permissions.has(PermissionsBitField.Flags.SendMessages) ||
+            !permissions.has(PermissionsBitField.Flags.EmbedLinks)
+        ) {
+            return interaction.reply({
+                content:
+                    "❌ **The bot cannot send messages in that channel!**\n\nGo to **Channel Settings → Permissions**, select my role, and enable:\n\n• ✅ Send Messages\n• ✅ Embed Links",
+                ephemeral: true
+            });
+        }
+
         await interaction.reply({
-            content: `✅ Selected channel: ${channel}`,
+            content: `✅ I can send messages in ${channel}.`,
             ephemeral: true
         });
 
