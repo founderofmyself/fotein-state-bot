@@ -64,33 +64,22 @@ module.exports = {
         const sub = interaction.options.getSubcommand();
 
         if (sub === "server-code") {
-
             config.serverCode = interaction.options.getString("code");
-
         }
 
         if (sub === "founders") {
-
             config.founders = interaction.options.getString("names");
-
         }
 
         if (sub === "minimum-votes") {
-
             config.minimumVotes = interaction.options.getInteger("amount");
-
         }
 
         if (sub === "session-role") {
-
             config.sessionRole = interaction.options.getRole("role").id;
-
         }
 
-        fs.writeFileSync(
-            configPath,
-            JSON.stringify(config, null, 4)
-        );
+        fs.writeFileSync(configPath, JSON.stringify(config, null, 4));
 
         await interaction.reply({
             content: "✅ Configuration updated successfully.",
@@ -98,11 +87,4 @@ module.exports = {
         });
 
     }
-
-    {
-    "serverCode": "FTNSRP",
-    "founders": "𝕱 | 𝕷𝖔𝖔𝖕𝖞\nCrewboo67 | Founder",
-    "minimumVotes": 2,
-    "sessionRole": ""
-}
 };
