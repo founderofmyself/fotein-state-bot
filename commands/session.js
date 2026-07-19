@@ -8,10 +8,13 @@ const {
     ButtonStyle
 } = require("discord.js");
 
+const { getConfig } = require("../utils/config");
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("session")
         .setDescription("Manage server sessions.")
+
         .addSubcommand(subcommand =>
             subcommand
                 .setName("start")
@@ -26,6 +29,8 @@ module.exports = {
         ),
 
     async execute(interaction) {
+
+        const config = getConfig();
 
         const channel = interaction.options.getChannel("channel");
 
@@ -43,29 +48,32 @@ module.exports = {
         }
 
         const embed = new EmbedBuilder()
-            .setColor("#5865F2")
+            .setColor(config.embedColor || "#5865F2")
             .setTitle("📢 Session Vote")
             .setDescription(
-`### ${interaction.user} has started a session vote!
+`### ${interaction.user} has started a session!
 
-If you would like to join, please vote below.
+If you would like to join, press **Vote** below.
 
-**Minimum Votes Required:** **2**
+**Minimum Votes Required:** **${config.minimumVotes}**
 
 ━━━━━━━━━━━━━━━━━━
 
 ## Server Info
 
-**Server Code:** FTNSRP
+**Server Code:** ${config.serverCode}
 
 **Server Founders**
-𝕱 | 𝕷𝖔𝖔𝖕𝖞
-Crewboo67 | Founder`
+${config.founders}`
             )
             .setFooter({
                 text: "Fontein Systems"
             })
             .setTimestamp();
+
+        if (config.bannerUrl && config.bannerUrl !== "") {
+            embed.setImage(config.bannerUrl);
+        }
 
         const row = new ActionRowBuilder()
             .addComponents(
@@ -75,13 +83,20 @@ Crewboo67 | Founder`
                     .setStyle(ButtonStyle.Success)
             );
 
+        let content = "";
+
+        if (config.sessionRole && config.sessionRole !== "") {
+            content = `<@&${config.sessionRole}>`;
+        }
+
         await channel.send({
+            content,
             embeds: [embed],
             components: [row]
         });
 
         await interaction.reply({
-            content: `✅ Session vote sent in ${channel}.`,
+            content: `✅ Session started in ${channel}`,
             ephemeral: true
         });
 
