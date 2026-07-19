@@ -1,5 +1,11 @@
 {
-  "serverCode": "FTNSRP",
-  "founders": "𝕱 | 𝕷𝖔𝖔𝖕𝖞\nCrewboo67 | Founder",
-  "minimumVotes": 2
+    "serverCode": "FTNSRP",
+    "founders": "𝕱 | 𝕷𝖔𝖔𝖕𝖞\nCrewboo67 | Founder",
+    "minimumVotes": 2,
+    "sessionRole": "",
+    "logChannel": "",
+    "sessionChannel": "",
+    "staffRole": "",
+    "embedColor": "#5865F2",
+    "bannerUrl": ""
 }
