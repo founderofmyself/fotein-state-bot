@@ -24,7 +24,7 @@ module.exports = {
         .addSubcommand(sub =>
             sub
                 .setName("founders")
-                .setDescription("Set the server founders")
+                .setDescription("Set the founders")
                 .addStringOption(option =>
                     option
                         .setName("names")
@@ -36,18 +36,30 @@ module.exports = {
         .addSubcommand(sub =>
             sub
                 .setName("minimum-votes")
-                .setDescription("Set the minimum votes required")
+                .setDescription("Set the minimum votes")
                 .addIntegerOption(option =>
                     option
                         .setName("amount")
-                        .setDescription("Minimum number of votes")
+                        .setDescription("Minimum votes")
+                        .setRequired(true)
+                )
+        )
+
+        .addSubcommand(sub =>
+            sub
+                .setName("session-role")
+                .setDescription("Set the session ping role")
+                .addRoleOption(option =>
+                    option
+                        .setName("role")
+                        .setDescription("Role to ping")
                         .setRequired(true)
                 )
         ),
 
     async execute(interaction) {
 
-        let config = JSON.parse(fs.readFileSync(configPath, "utf8"));
+        const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
 
         const sub = interaction.options.getSubcommand();
 
@@ -55,31 +67,11 @@ module.exports = {
 
             config.serverCode = interaction.options.getString("code");
 
-            fs.writeFileSync(
-                configPath,
-                JSON.stringify(config, null, 4)
-            );
-
-            return interaction.reply({
-                content: `✅ Server code updated to **${config.serverCode}**`,
-                ephemeral: true
-            });
-
         }
 
         if (sub === "founders") {
 
             config.founders = interaction.options.getString("names");
-
-            fs.writeFileSync(
-                configPath,
-                JSON.stringify(config, null, 4)
-            );
-
-            return interaction.reply({
-                content: "✅ Founders updated successfully.",
-                ephemeral: true
-            });
 
         }
 
@@ -87,17 +79,30 @@ module.exports = {
 
             config.minimumVotes = interaction.options.getInteger("amount");
 
-            fs.writeFileSync(
-                configPath,
-                JSON.stringify(config, null, 4)
-            );
+        }
 
-            return interaction.reply({
-                content: `✅ Minimum votes updated to **${config.minimumVotes}**`,
-                ephemeral: true
-            });
+        if (sub === "session-role") {
+
+            config.sessionRole = interaction.options.getRole("role").id;
 
         }
 
+        fs.writeFileSync(
+            configPath,
+            JSON.stringify(config, null, 4)
+        );
+
+        await interaction.reply({
+            content: "✅ Configuration updated successfully.",
+            ephemeral: true
+        });
+
     }
+
+    {
+    "serverCode": "FTNSRP",
+    "founders": "𝕱 | 𝕷𝖔𝖔𝖕𝖞\nCrewboo67 | Founder",
+    "minimumVotes": 2,
+    "sessionRole": ""
+}
 };
